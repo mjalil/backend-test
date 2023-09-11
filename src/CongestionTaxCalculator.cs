@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using System.Linq;
 using congestion.calculator;
 
@@ -24,38 +25,57 @@ public class CongestionTaxCalculator
         {
             return 0;
         }
-        var sortedDates = dates.ToList();
-        sortedDates.Sort();
-        if (sortedDates.Last().Date != sortedDates.First().Date)
+        if (dates.Max().Date != dates.Min().Date)
         {
             throw new ArgumentOutOfRangeException(nameof(dates), "all dates must be on one day");
         }
-        
-        DateTime intervalStart = dates[0];
-        var intervalFee = GetTollFee(intervalStart, vehicle);
+        var maxFee = 60;
+        var singleChargeIntervalInMinutes = 60;
+
         int totalFee = 0;
-        foreach (DateTime date in sortedDates)
+        var intervalBuckets = GroupDatesByInterval(dates, singleChargeIntervalInMinutes);
+        foreach (var interval in intervalBuckets)
         {
-            int nextFee = GetTollFee(date, vehicle);
+            totalFee += GetTollFeeOfInterval(interval, vehicle);
+            if (totalFee >= maxFee) break;
+        }
+        if (totalFee > maxFee) totalFee = maxFee;
+        return totalFee;
+    }
 
-            int minutes = (date - intervalStart).Minutes;
-
-            if (minutes <= 60)
+    /// <summary>
+    /// Group dates by putting all dates that are near to each other within <paramref name="intervalLengthMinutes"/>
+    /// starting from the minimum date in the <paramref name="dates"/> list
+    /// </summary>
+    /// <param name="dates">dates to be grouped</param>
+    /// <param name="intervalLengthMinutes">interval that dates are grouped by it</param>
+    /// <returns></returns>
+    private static List<List<DateTime>> GroupDatesByInterval(IEnumerable<DateTime> dates, int intervalLengthMinutes)
+    {
+        var sortedDates = dates.ToList();
+        sortedDates.Sort();
+        var intervalBuckets = new List<List<DateTime>>();
+        var bucket = new List<DateTime>();
+        DateTime intervalStart = sortedDates.First();
+        foreach (var dateTime in sortedDates)
+        {
+            if ((dateTime - intervalStart).Minutes < intervalLengthMinutes)
             {
-                if (totalFee > 0) totalFee -= intervalFee;
-                if (nextFee > intervalFee) intervalFee = nextFee;
-                totalFee += intervalFee;
+                bucket.Add(dateTime);
             }
             else
             {
-                intervalStart = date;
-                intervalFee = nextFee;
-                totalFee += nextFee;
+                intervalBuckets.Add(bucket);
+                intervalStart = dateTime;
+                bucket = new List<DateTime> { dateTime };
             }
         }
-        if (totalFee > 60) totalFee = 60;
-        return totalFee;
+
+        return intervalBuckets;
     }
+
+    private int GetTollFeeOfInterval(IEnumerable<DateTime> intervalDateTimes, Vehicle vehicle) =>
+        intervalDateTimes.Max(time => GetTollFee(time, vehicle));
 
     private bool IsTollFreeVehicle(Vehicle vehicle)
     {
