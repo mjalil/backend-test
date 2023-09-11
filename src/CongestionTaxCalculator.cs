@@ -1,14 +1,18 @@
 using System;
+using System.Linq;
 using congestion.calculator;
+
 public class CongestionTaxCalculator
 {
-    /**
-         * Calculate the total toll fee for one day
-         *
-         * @param vehicle - the vehicle
-         * @param dates   - date and time of all passes on one day
-         * @return - the total congestion tax for that day
-         */
+    private static readonly VehicleType[] TollFreeVehicles = new []
+    {
+        VehicleType.Motorcycle,
+        VehicleType.Bus,
+        VehicleType.Emergency,
+        VehicleType.Diplomat,
+        VehicleType.Foreign,
+        VehicleType.Military
+    };
 
     public int GetTax(Vehicle vehicle, DateTime[] dates)
     {
@@ -40,13 +44,8 @@ public class CongestionTaxCalculator
     private bool IsTollFreeVehicle(Vehicle vehicle)
     {
         if (vehicle == null) return false;
-        String vehicleType = vehicle.GetVehicleType();
-        return vehicleType.Equals(TollFreeVehicles.Motorcycle.ToString()) ||
-               vehicleType.Equals(TollFreeVehicles.Bus.ToString()) ||
-               vehicleType.Equals(TollFreeVehicles.Emergency.ToString()) ||
-               vehicleType.Equals(TollFreeVehicles.Diplomat.ToString()) ||
-               vehicleType.Equals(TollFreeVehicles.Foreign.ToString()) ||
-               vehicleType.Equals(TollFreeVehicles.Military.ToString());
+        var vehicleType = vehicle.GetVehicleType();
+        return TollFreeVehicles.Contains(vehicleType);
     }
 
     public int GetTollFee(DateTime date, Vehicle vehicle)
@@ -92,15 +91,5 @@ public class CongestionTaxCalculator
             }
         }
         return false;
-    }
-
-    private enum TollFreeVehicles
-    {
-        Motorcycle = 0,
-        Bus = 1,
-        Emergency = 2,
-        Diplomat = 3,
-        Foreign = 4,
-        Military = 5
     }
 }
