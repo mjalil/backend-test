@@ -1,0 +1,36 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "solution items", "solution items", "{90CE3966-5F7C-4731-BA37-0666DE985360}"
+	ProjectSection(SolutionItems) = preProject
+		ASSIGNMENT.md = ASSIGNMENT.md
+		README.md = README.md
+	EndProjectSection
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "src", "src", "{1626B761-E286-4854-8AD4-34D40B4BEF75}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "test", "test", "{922D507F-B1F2-49BA-AB08-18676539FB80}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "congestion-tax-calculator-net-core", "src\congestion-tax-calculator-net-core.csproj", "{82FC6E68-2793-46E5-BDEA-E360A380237D}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Calculator.Tests", "test\Calculator.Tests\Calculator.Tests.csproj", "{4CDF45F1-A2DB-4F3D-BF6C-B9AE97DDB060}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{82FC6E68-2793-46E5-BDEA-E360A380237D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{82FC6E68-2793-46E5-BDEA-E360A380237D}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{82FC6E68-2793-46E5-BDEA-E360A380237D}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{82FC6E68-2793-46E5-BDEA-E360A380237D}.Release|Any CPU.Build.0 = Release|Any CPU
+		{4CDF45F1-A2DB-4F3D-BF6C-B9AE97DDB060}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{4CDF45F1-A2DB-4F3D-BF6C-B9AE97DDB060}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{4CDF45F1-A2DB-4F3D-BF6C-B9AE97DDB060}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{4CDF45F1-A2DB-4F3D-BF6C-B9AE97DDB060}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{82FC6E68-2793-46E5-BDEA-E360A380237D} = {1626B761-E286-4854-8AD4-34D40B4BEF75}
+		{4CDF45F1-A2DB-4F3D-BF6C-B9AE97DDB060} = {922D507F-B1F2-49BA-AB08-18676539FB80}
+	EndGlobalSection
+EndGlobal
