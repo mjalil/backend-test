@@ -32,22 +32,24 @@ public class CongestionTaxCalculator
         }
         
         DateTime intervalStart = dates[0];
+        var intervalFee = GetTollFee(intervalStart, vehicle);
         int totalFee = 0;
         foreach (DateTime date in sortedDates)
         {
             int nextFee = GetTollFee(date, vehicle);
-            int tempFee = GetTollFee(intervalStart, vehicle);
 
             int minutes = (date - intervalStart).Minutes;
 
             if (minutes <= 60)
             {
-                if (totalFee > 0) totalFee -= tempFee;
-                if (nextFee >= tempFee) tempFee = nextFee;
-                totalFee += tempFee;
+                if (totalFee > 0) totalFee -= intervalFee;
+                if (nextFee > intervalFee) intervalFee = nextFee;
+                totalFee += intervalFee;
             }
             else
             {
+                intervalStart = date;
+                intervalFee = nextFee;
                 totalFee += nextFee;
             }
         }
