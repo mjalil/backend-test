@@ -20,15 +20,25 @@ public class CongestionTaxCalculator
     /// <returns>the total congestion tax for that day</returns>
     public int GetTax(Vehicle vehicle, DateTime[] dates)
     {
+        if (dates == null || dates.Length == 0)
+        {
+            return 0;
+        }
+        var sortedDates = dates.ToList();
+        sortedDates.Sort();
+        if (sortedDates.Last().Date != sortedDates.First().Date)
+        {
+            throw new ArgumentOutOfRangeException(nameof(dates), "all dates must be on one day");
+        }
+        
         DateTime intervalStart = dates[0];
         int totalFee = 0;
-        foreach (DateTime date in dates)
+        foreach (DateTime date in sortedDates)
         {
             int nextFee = GetTollFee(date, vehicle);
             int tempFee = GetTollFee(intervalStart, vehicle);
 
-            long diffInMillies = date.Millisecond - intervalStart.Millisecond;
-            long minutes = diffInMillies / 1000 / 60;
+            int minutes = (date - intervalStart).Minutes;
 
             if (minutes <= 60)
             {
