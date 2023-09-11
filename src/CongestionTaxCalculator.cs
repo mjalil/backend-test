@@ -14,6 +14,10 @@ public class CongestionTaxCalculator
         VehicleType.Military
     };
 
+    /// <summary>Calculate the total toll fee for one day</summary>
+    /// <param name="vehicle">the vehicle</param>
+    /// <param name="dates">date and time of all passes on one day</param>
+    /// <returns>the total congestion tax for that day</returns>
     public int GetTax(Vehicle vehicle, DateTime[] dates)
     {
         DateTime intervalStart = dates[0];
