@@ -16,6 +16,18 @@ public class CongestionTaxCalculator
         VehicleType.Military
     };
 
+    private TimeOnly _6_00 = new TimeOnly(6, 0);
+    private TimeOnly _6_30 = new TimeOnly(6, 30);
+    private TimeOnly _7_00 = new TimeOnly(7, 0);
+    private TimeOnly _8_00 = new TimeOnly(8, 0);
+    private TimeOnly _8_30 = new TimeOnly(8, 30);
+    private TimeOnly _15_00 = new TimeOnly(15, 0);
+    private TimeOnly _15_30 = new TimeOnly(15, 30);
+    private TimeOnly _17_00 = new TimeOnly(17, 0);
+    private TimeOnly _18_00 = new TimeOnly(18, 0);
+    private TimeOnly _18_30 = new TimeOnly(18, 30);
+
+
     /// <summary>Calculate the total toll fee for one day</summary>
     /// <param name="vehicle">the vehicle</param>
     /// <param name="dates">date and time of all passes on one day</param>
@@ -60,7 +72,7 @@ public class CongestionTaxCalculator
         DateTime intervalStart = sortedDates.First();
         foreach (var dateTime in sortedDates)
         {
-            if ((dateTime - intervalStart).Minutes < intervalLengthMinutes)
+            if ((dateTime - intervalStart).TotalMinutes < intervalLengthMinutes)
             {
                 bucket.Add(dateTime);
             }
@@ -71,6 +83,8 @@ public class CongestionTaxCalculator
                 bucket = new List<DateTime> { dateTime };
             }
         }
+        // add last bucket
+        intervalBuckets.Add(bucket);
 
         return intervalBuckets;
     }
@@ -89,19 +103,17 @@ public class CongestionTaxCalculator
     {
         if (IsTollFreeDate(date) || IsTollFreeVehicle(vehicle)) return 0;
 
-        int hour = date.Hour;
-        int minute = date.Minute;
-
-        if (hour == 6 && minute >= 0 && minute <= 29) return 8;
-        else if (hour == 6 && minute >= 30 && minute <= 59) return 13;
-        else if (hour == 7 && minute >= 0 && minute <= 59) return 18;
-        else if (hour == 8 && minute >= 0 && minute <= 29) return 13;
-        else if (hour >= 8 && hour <= 14 && minute >= 30 && minute <= 59) return 8;
-        else if (hour == 15 && minute >= 0 && minute <= 29) return 13;
-        else if (hour == 15 && minute >= 0 || hour == 16 && minute <= 59) return 18;
-        else if (hour == 17 && minute >= 0 && minute <= 59) return 13;
-        else if (hour == 18 && minute >= 0 && minute <= 29) return 8;
-        else return 0;
+        var time = TimeOnly.FromTimeSpan(date.TimeOfDay);
+        if (time >= _6_00 && time < _6_30) return 8;
+        if (time >= _6_00 && time < _7_00) return 13;
+        if (time >= _7_00 && time < _8_00) return 18;
+        if (time >= _8_00 && time < _8_30) return 13;
+        if (time >= _8_30 && time < _15_00) return 8;
+        if (time >= _15_00 && time < _15_30) return 13;
+        if (time >= _15_30 && time < _17_00) return 18;
+        if (time >= _17_00 && time < _18_00) return 13;
+        if (time >= _18_00 && time < _18_30) return 8;
+        return 0;
     }
 
     private Boolean IsTollFreeDate(DateTime date)
