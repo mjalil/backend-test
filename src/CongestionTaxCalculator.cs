@@ -1,7 +1,8 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using congestion.calculator;
+
+namespace congestion.calculator;
 
 public class CongestionTaxCalculator
 {
