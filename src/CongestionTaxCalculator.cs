@@ -31,6 +31,7 @@ public class CongestionTaxCalculator
     /// <summary>Calculate the total toll fee for one day</summary>
     /// <param name="vehicle">the vehicle</param>
     /// <param name="dates">date and time of all passes on one day</param>
+    /// <exception cref="ArgumentOutOfRangeException">if all of dates are not from one day</exception>
     /// <returns>the total congestion tax for that day</returns>
     public int GetTax(Vehicle vehicle, DateTime[] dates)
     {
@@ -94,7 +95,7 @@ public class CongestionTaxCalculator
 
     private bool IsTollFreeVehicle(Vehicle vehicle)
     {
-        if (vehicle == null) return false;
+        if (vehicle == null) return true;
         var vehicleType = vehicle.GetVehicleType();
         return TollFreeVehicles.Contains(vehicleType);
     }
@@ -105,7 +106,7 @@ public class CongestionTaxCalculator
 
         var time = TimeOnly.FromTimeSpan(date.TimeOfDay);
         if (time >= _6_00 && time < _6_30) return 8;
-        if (time >= _6_00 && time < _7_00) return 13;
+        if (time >= _6_30 && time < _7_00) return 13;
         if (time >= _7_00 && time < _8_00) return 18;
         if (time >= _8_00 && time < _8_30) return 13;
         if (time >= _8_30 && time < _15_00) return 8;
